@@ -153,3 +153,5 @@ fabric.properties
 **/.DS_Store
 **/*.ok_history
 **/*.ok_storage.db
+.DS_Store
+**/.ipynb_checkpoints/*
