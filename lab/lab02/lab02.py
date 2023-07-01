@@ -1,4 +1,3 @@
-
 def lambda_curry2(func):
     """
     Returns a Curried version of a two-argument function FUNC.
@@ -15,7 +14,7 @@ def lambda_curry2(func):
     3
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return lambda x: lambda y: func(x, y)
 
 
 def count_cond(condition):
@@ -46,6 +45,7 @@ def count_cond(condition):
     8
     """
     "*** YOUR CODE HERE ***"
+    return lambda n: sum([int(condition(n, i)) for i in range(1, n + 1)])
 
 
 def compose1(f, g):
@@ -81,6 +81,7 @@ def composite_identity(f, g):
     False
     """
     "*** YOUR CODE HERE ***"
+    return lambda x: compose1(f, g)(x) == compose1(g, f)(x)
 
 
 def cycle(f1, f2, f3):
@@ -110,3 +111,13 @@ def cycle(f1, f2, f3):
     19
     """
     "*** YOUR CODE HERE ***"
+
+    funcs = [f1, f2, f3]
+
+    def cyclic(n):
+        nonlocal funcs
+        if n == 0:
+            return lambda x: x
+        return lambda x: funcs[(n - 1) % 3](cyclic(n - 1)(x))
+
+    return cyclic
