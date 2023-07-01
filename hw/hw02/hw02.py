@@ -8,7 +8,6 @@ triple = lambda x: 3 * x
 
 increment = lambda x: x + 1
 
-
 HW_SOURCE_FILE = __file__
 
 
@@ -30,7 +29,10 @@ def product(n, term):
     >>> product(3, triple)    # 1*3 * 2*3 * 3*3
     162
     """
-    "*** YOUR CODE HERE ***"
+    if n == 1:
+        return term(n)
+
+    return term(n) * product(n - 1, term)
 
 
 def square(x):
@@ -59,7 +61,10 @@ def accumulate(combiner, base, n, term):
     >>> accumulate(lambda x, y: (x + y) % 17, 19, 20, square)
     16
     """
-    "*** YOUR CODE HERE ***"
+    if n == 0:
+        return base
+
+    return combiner(term(n), accumulate(combiner, base, n - 1, term))
 
 
 def summation_using_accumulate(n, term):
@@ -76,7 +81,7 @@ def summation_using_accumulate(n, term):
     ...       ['Recursion', 'For', 'While'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    return accumulate(add, 0, n, term)
 
 
 def product_using_accumulate(n, term):
@@ -92,13 +97,15 @@ def product_using_accumulate(n, term):
     ...       ['Recursion', 'For', 'While'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    return accumulate(mul, 1, n, term)
 
 
 def compose1(func1, func2):
     """Return a function f, such that f(x) = func1(func2(x))."""
+
     def f(x):
         return func1(func2(x))
+
     return f
 
 
@@ -117,25 +124,45 @@ def make_repeater(func, n):
     >>> make_repeater(square, 0)(5) # Yes, it makes sense to apply the function zero times!
     5
     """
-    "*** YOUR CODE HERE ***"
+    # if n == 0:
+    #     return identity
+    #
+    # if n == 1:
+    #     return func
+    #
+    # def f(x):
+    #     return func(make_repeater(func, n - 1)(x))
+    #
+    # return f
+
+    return accumulate(compose1, identity, n, lambda n: func)
 
 
 def zero(f):
+    """
+    zero(f)(x) = x
+    """
     return lambda x: x
 
 
 def successor(n):
+    """
+    successor(zero)(f)(x) = f(x)
+    successor(successor(zero))(f)(x) = f(successor(zero)(f)(x)) = f(f(x))
+    """
     return lambda f: lambda x: f(n(f)(x))
 
 
 def one(f):
     """Church numeral 1: same as successor(zero)"""
-    "*** YOUR CODE HERE ***"
+    # one(f)(x) = f(x)
+    return lambda x: f(x)
 
 
 def two(f):
     """Church numeral 2: same as successor(successor(zero))"""
-    "*** YOUR CODE HERE ***"
+    # two(f)(x) = f(f(x))
+    return lambda x: f(f(x))
 
 
 three = successor(two)
@@ -153,7 +180,8 @@ def church_to_int(n):
     >>> church_to_int(three)
     3
     """
-    "*** YOUR CODE HERE ***"
+    # zero(++)(0) = 0, one(++)(0) = 1
+    return n(lambda x: x + 1)(0)
 
 
 def add_church(m, n):
@@ -162,7 +190,12 @@ def add_church(m, n):
     >>> church_to_int(add_church(two, three))
     5
     """
-    "*** YOUR CODE HERE ***"
+
+    # two(f)(x) = f(f(x))
+    # three(f)(x) = f(f(f(x)))
+    #
+    # three(f)( two(f)(x) ) = f(f(f( f(f(x)) ))) = five(f)(x)
+    return lambda f: lambda x: n(f)(m(f)(x))
 
 
 def mul_church(m, n):
@@ -174,7 +207,12 @@ def mul_church(m, n):
     >>> church_to_int(mul_church(three, four))
     12
     """
-    "*** YOUR CODE HERE ***"
+    # two(f)(x) = f(f(x))
+    # three(f)(x) = f(f(f(x)))
+    #
+    # six(f)(x) = f(f(f(f(  two(f)(x)  )))) = f(f(   two(f)(two(f)(x))  )) = two(f)two(f)(two(f)(x)))
+    #           = three(two(f))(x)
+    return lambda f: lambda x: n(m(f))(x)
 
 
 def pow_church(m, n):
@@ -185,4 +223,14 @@ def pow_church(m, n):
     >>> church_to_int(pow_church(three, two))
     9
     """
-    "*** YOUR CODE HERE ***"
+
+    # 2^3 = 2 * 2 * 2
+    # 2^2 = 2 * 2
+    # 2^1 = 2
+    # 2^0 = 1
+
+    n = church_to_int(n)
+    result = one
+    for i in range(n):
+        result = mul_church(result, m)
+    return result
