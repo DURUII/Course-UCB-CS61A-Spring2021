@@ -8,7 +8,7 @@
 |  ✅   | 2. Functions                            |       |   HW01   |                               |
 |  ✅   | 3. Control                              | Lab01 |          |                               |
 |  ✅   | 4. Higher-Order Functions               |       |          |        The Game of Hog        |
-|      | 5. Environments                         |       |   HW02   |                               |
+|  ✅   | 5. Environments                         |       |   HW02   |                               |
 |      | 6. Recursion                            | Lab02 |          |                               |
 |      | 7. Tree Recursion                       |       |          |                               |
 |      | 8. Design + Exceptions                  |       |   HW03   |                               |
