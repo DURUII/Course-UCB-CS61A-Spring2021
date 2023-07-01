@@ -3,11 +3,11 @@
 ## TODO
 
 | Flag | Lecture                                 |  Lab  | Homework | Project |
-|:----:|:----------------------------------------|:-----:|:--------:|---------|
+|:----:|:----------------------------------------|:-----:|:--------:|:-------:|
 |  ✅   | 1. Introduction                         | Lab00 |          |         |
 |  ✅   | 2. Functions                            |       |   HW01   |         |
 |  ✅   | 3. Control                              | Lab01 |          |         |
-|      | 4. Higher-Order Functions               |       |          |         |
+|  ✅   | 4. Higher-Order Functions               |       |          |   Hog   |
 |      | 5. Environments                         |       |          |         |
 |      | 6. Recursion                            |       |          |         |
 |      | 7. Tree Recursion                       |       |          |         |
