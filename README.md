@@ -41,4 +41,4 @@
 |      | 35. Intro to SQL (optional)             |       |          |                                     |
 |      | 36. Review: Linked Lists + Trees        | Lab14 |          |                                     |
 |      | 37. OOP: Review + Design                |       |          |                                     |
-|      | 38. Conclusion                          |       |   HW10   |                                     |
+|      | 38. Conclusion                          |       |          |                                     |
