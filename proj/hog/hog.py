@@ -377,6 +377,8 @@ def more_boar_strategy(score, opponent_score, cutoff=8, num_rolls=6):
 
 def final_strategy(score, opponent_score):
     """Write a brief description of your final strategy.
+
+    Roll a dice? Roll a dice.
     """
 
     # BEGIN PROBLEM 12
