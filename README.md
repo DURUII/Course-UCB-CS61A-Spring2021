@@ -9,9 +9,9 @@
 |  ✅   | 3. Control                              | Lab01 |          |                               |
 |  ✅   | 4. Higher-Order Functions               |       |          |        The Game of Hog        |
 |  ✅   | 5. Environments                         |       |   HW02   |                               |
-|      | 6. Recursion                            | Lab02 |          |                               |
-|      | 7. Tree Recursion                       |       |          |                               |
-|      | 8. Design + Exceptions                  |       |   HW03   |                               |
+|  ✅   | 6. Recursion                            | Lab02 |          |                               |
+|  ✅   | 7. Tree Recursion                       |       |          |                               |
+|  ✅   | 8. Design + Exceptions                  |       |   HW03   |                               |
 |      | 9. Function Examples                    | Lab03 |          |                               |
 |      | 10. Containers                          |       |          |                               |
 |      | 11. Data Abstraction                    | Lab04 |          | Autocorrected Typing Software |
@@ -26,7 +26,7 @@
 |      | 20. Complexity                          |       |          |                               |
 |      | 21. Memoization                         |       |          |                               |
 |      | 22. Generics                            | Lab08 |          |                               |
-|      | 23. Fun with Iterables                  |       |          |                               |
+|  ✈️  | 23. Fun with Iterables                  |       |          |                               |
 |      | 24. Scheme                              | Lab10 |   HW06   |                               |
 |      | 25. Scheme Examples                     |       |          |                               |
 |      | 26. Calculator                          |       |   HW07   |                               |
@@ -42,3 +42,8 @@
 |      | 36. Review: Linked Lists + Trees        | Lab14 |          |                               |
 |      | 37. OOP: Review + Design                |       |          |                               |
 |      | 38. Conclusion                          |       |          |                               |
+
+## Thought-provoking Homework
+
+- HW02: Church numeral
+- HW03: change_coins, make_anonymous_factorial
