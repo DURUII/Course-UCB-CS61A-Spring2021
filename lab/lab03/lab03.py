@@ -19,7 +19,10 @@ def summation(n, term):
     True
     """
     assert n >= 1
-    "*** YOUR CODE HERE ***"
+    if n == 1:
+        return term(n)
+
+    return term(n) + summation(n - 1, term)
 
 
 def pascal(row, column):
@@ -34,13 +37,23 @@ def pascal(row, column):
     >>> pascal(4, 2)     # Row 4 (1 4 6 4 1), Column 2
     6
     """
-    "*** YOUR CODE HERE ***"
+    # guard
+    if column < 0 or row < 0 or column > row:
+        return 0
+
+    # base case
+    if row == 0 and column == 0:
+        return 1
+
+    return pascal(row - 1, column) + pascal(row - 1, column - 1)
 
 
 def compose1(f, g):
     """"Return a function h, such that h(x) = f(g(x))."""
+
     def h(x):
         return f(g(x))
+
     return h
 
 
@@ -65,4 +78,10 @@ def repeated(f, n):
     ...       ['For', 'While'])
     True
     """
-    "*** YOUR CODE HERE ***"
+
+    def func(t):
+        if t == 0:
+            return lambda x: x
+        return compose1(f, func(t - 1))
+
+    return func(n)

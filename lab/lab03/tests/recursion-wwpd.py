@@ -14,20 +14,16 @@ test = {
           ...     else:
           ...         return b
           >>> f(2, 2)
-          73a9752b0761167119f7a8667ed17719
-          # locked
+          2
           >>> f(7, 4)
-          ad741b000d1cc7ef3beaaf650d8f371b
-          # locked
+          4
           >>> f(2, 28)
-          11f2dd23b3fd248f63abf27f5ba01f68
-          # locked
+          8
           >>> f(-1, -3)
-          47fe0628cbfd93cd06420a3a6865a28b
-          # locked
+          Infinite
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': False,
