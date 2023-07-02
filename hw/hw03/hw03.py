@@ -22,7 +22,10 @@ def num_eights(x):
     ...       ['Assign', 'AugAssign'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    if x < 10:
+        return 1 if x == 8 else 0
+
+    return num_eights(x // 10) + num_eights(x % 10)
 
 
 def pingpong(n):
@@ -57,7 +60,26 @@ def pingpong(n):
     >>> check(HW_SOURCE_FILE, 'pingpong', ['Assign', 'AugAssign'])
     True
     """
-    "*** YOUR CODE HERE ***"
+
+    def start_from(index, value, direction):
+        """
+        Keep status of value and direction at the current index,
+        Return the value of Nth sequence STARTING FROM a given index, along with its value and direction
+        """
+        # take parameter N from the parent environment
+        if index == n:
+            print("DEBUG:", index, value, direction)
+            return value
+
+        # n.b. do not miss the `return` in the statement,
+        # otherwise this will return None in Python
+        return start_from(index + 1,
+                          value + direction,
+                          direction * -1  # the direction of [index+1]
+                          if num_eights(index + 1) > 0 or (index + 1) % 8 == 0
+                          else direction)
+
+    return start_from(1, 1, 1)
 
 
 def missing_digits(n):
@@ -88,7 +110,20 @@ def missing_digits(n):
     >>> check(HW_SOURCE_FILE, 'missing_digits', ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
+
+    # guard
+    if n < 10:
+        return 0
+
+    # base case: 2-digit number
+    # e.g. 58 -> number(6, 7) -> 8 - 5 - 1
+    # e.g. 11 -> 0
+    if 10 <= n <= 99:
+        # do not miss the `No Missing` case
+        return max(n % 10 - n // 10 - 1, 0)
+
+    # e.g. f(16789) -> f(1678) + f(89)
+    return missing_digits(n // 10) + missing_digits(n % 100)
 
 
 def get_next_coin(coin):
@@ -124,7 +159,35 @@ def count_coins(change):
     >>> check(HW_SOURCE_FILE, 'count_coins', ['While', 'For'])                                          
     True
     """
-    "*** YOUR CODE HERE ***"
+
+    # e.g. of a bad thought
+    # change(1) -> {1} = 1
+    # change(2) -> change(1) u {1} = change(1) = 1
+    # change(3) -> change(2) u {1} = change(1) = 1
+    # change(4) -> change(3) u {1} = change(1) = 1
+    # change(5) -> change(4) u {1} + change(0) u {5} = 2
+    # change(6) -> change(5) u {1} + change(1) u {5} = 3 ({1,1,1,1,1,1}, {5, 1}, {1, 5})
+    #
+    # e.g. of a better thought (specify the ORDER of different coins)
+    # change(6) -> change(6)from(1) + change(6)from(1, 5) = 2
+
+    def change_from(money, note):
+        """
+        Return counts of ways to change MONEY using [note ~ max_note]
+        which is derived from the thought on count_partitions (slightly different in m)
+        """
+        # guard
+        if money < 0 or note is None:
+            return 0
+
+        # base case
+        if money == 0:
+            return 1
+
+        # 不重不漏！！！
+        return change_from(money - note, note) + change_from(money, get_next_coin(note))
+
+    return change_from(change, 1)
 
 
 from operator import sub, mul
@@ -140,7 +203,11 @@ def make_anonymous_factorial():
     >>> check(HW_SOURCE_FILE, 'make_anonymous_factorial', ['Assign', 'AugAssign', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+
+    # ref source: https://stackoverflow.com/a/8703135
+    return (lambda myself: lambda args: myself(myself, args))(
+        lambda f, n: 1 if n == 1 else mul(n, f(f, sub(n, 1)))
+    )
 
 
 def print_move(origin, destination):
@@ -176,4 +243,12 @@ def move_stack(n, start, end):
     Move the top disk from rod 1 to rod 3
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
-    "*** YOUR CODE HERE ***"
+
+    if n == 1:
+        print_move(start, end)
+        return
+
+    spare = 6 - start - end
+    move_stack(n - 1, start, spare)
+    move_stack(1, start, end)
+    move_stack(n - 1, spare, end)
