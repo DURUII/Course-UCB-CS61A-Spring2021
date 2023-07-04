@@ -189,6 +189,7 @@ def sprout_leaves(t, leaves):
     """
     "*** YOUR CODE HERE ***"
 
+
 # Abstraction tests for sprout_leaves and berry_finder
 
 
@@ -352,6 +353,7 @@ def shakespeare_tokens(path='shakespeare.txt', url='http://composingprograms.com
     else:
         shakespeare = urlopen(url)
         return shakespeare.read().decode(encoding='ascii').split()
+
 
 # Uncomment the following two lines
 # tokens = shakespeare_tokens()

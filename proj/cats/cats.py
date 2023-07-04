@@ -1,4 +1,5 @@
 """Typing test implementation"""
+import math
 
 from utils import lower, split, remove_punctuation, lines_from_file
 from ucb import main, interact, trace
@@ -30,7 +31,8 @@ def choose(paragraphs, select, k):
     ''
     """
     # BEGIN PROBLEM 1
-    "*** YOUR CODE HERE ***"
+    options = [paragraph for paragraph in paragraphs if select(paragraph)]
+    return options[k] if k < len(options) else ""
     # END PROBLEM 1
 
 
@@ -48,8 +50,16 @@ def about(topic):
     'Nice pup.'
     """
     assert all([lower(x) == x for x in topic]), 'topics should be lowercase.'
+
     # BEGIN PROBLEM 2
-    "*** YOUR CODE HERE ***"
+    def select(paragraph):
+        words = set(split(remove_punctuation(lower(paragraph))))
+        for word in words:
+            if word in topic:
+                return True
+        return False
+
+    return select
     # END PROBLEM 2
 
 
@@ -79,7 +89,13 @@ def accuracy(typed, reference):
     typed_words = split(typed)
     reference_words = split(reference)
     # BEGIN PROBLEM 3
-    "*** YOUR CODE HERE ***"
+    if not typed_words and not reference_words:
+        return 100.0
+
+    if not typed_words or not reference_words:
+        return 0.0
+
+    return sum([t == r for t, r in zip(typed_words, reference_words)]) / len(typed_words) * 100
     # END PROBLEM 3
 
 
@@ -97,7 +113,7 @@ def wpm(typed, elapsed):
     """
     assert elapsed > 0, 'Elapsed time must be positive'
     # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
+    return len(typed) / 5 / elapsed * 60.0
     # END PROBLEM 4
 
 
@@ -124,7 +140,12 @@ def autocorrect(typed_word, valid_words, diff_function, limit):
     'testing'
     """
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    if typed_word in valid_words:
+        return typed_word
+
+    diffs = [(valid_word, diff_function(typed_word, valid_word, limit)) for valid_word in valid_words]
+    candidate_word, min_diff = min(diffs, key=lambda item: item[1])  # the first item
+    return typed_word if min_diff > limit else candidate_word
     # END PROBLEM 5
 
 
@@ -151,7 +172,16 @@ def sphinx_switches(start, goal, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    if abs(len(goal) - len(start)) > limit:
+        return limit + 1
+
+    if not start or not goal:
+        return abs(len(goal) - len(start))
+
+    if start[0] != goal[0]:
+        return 1 + sphinx_switches(start[1:], goal[1:], limit - 1)
+    else:
+        return sphinx_switches(start[1:], goal[1:], limit)
     # END PROBLEM 6
 
 
@@ -171,32 +201,30 @@ def pawssible_patches(start, goal, limit):
     2
     >>> pawssible_patches("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
+
+    ref source: 最短编辑距离 https://www.acwing.com/problem/content/904/
     """
-    assert False, 'Remove this line'
 
-    if ______________:  # Fill in the condition
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
+    if abs(len(start) - len(goal)) > limit:
+        return limit + 1
 
-    elif ___________:  # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
+    if not start or not goal:
+        return abs(len(start) - len(goal))
 
-    else:
-        add = ...  # Fill in these lines
-        remove = ...
-        substitute = ...
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
+    add = pawssible_patches(start, goal[1:], limit - 1) + 1
+    remove = pawssible_patches(start[1:], goal, limit - 1) + 1
+    substitute = pawssible_patches(start[1:], goal[1:], limit) \
+        if start[0] == goal[0] \
+        else pawssible_patches(start[1:], goal[1:], limit - 1) + 1
+
+    return min(add, remove, substitute)
 
 
 def final_diff(start, goal, limit):
     """A diff function that takes in a string START, a string GOAL, and a number LIMIT.
-    If you implement this function, it will be used."""
-    assert False, 'Remove this line to use your final_diff function.'
+    If you implement this function, it will be used.
+    """
+    return pawssible_patches(start, goal, limit)
 
 
 FINAL_DIFF_LIMIT = 6  # REPLACE THIS WITH YOUR LIMIT
@@ -231,7 +259,15 @@ def report_progress(typed, prompt, user_id, send):
     0.2
     """
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    acc, data = 0, {'id': user_id}
+    for i in range(min(map(len, (typed, prompt)))):
+        if typed[i] != prompt[i]:
+            break
+        acc += 1
+    data['progress'] = acc / len(prompt)
+
+    send(data)
+    return data['progress']
     # END PROBLEM 8
 
 
@@ -264,7 +300,9 @@ def time_per_word(times_per_player, words):
     [[6, 3, 6, 2], [10, 6, 1, 2]]
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    return game(words,
+                [[times[i] - times[i - 1] for i in range(1, len(times))] \
+                 for times in times_per_player])
     # END PROBLEM 9
 
 
@@ -280,9 +318,17 @@ def fastest_words(game):
     [['have', 'fun'], ['Just']]
     """
     player_indices = range(len(all_times(game)))  # contains an *index* for each player
-    word_indices = range(len(all_words(game)))    # contains an *index* for each word
+    word_indices = range(len(all_words(game)))  # contains an *index* for each word
     # BEGIN PROBLEM 10
-    "*** YOUR CODE HERE ***"
+    data = [[] for _ in player_indices]
+    for word_index in word_indices:
+        boss_time, boss_player = math.inf, 0
+        for player_index in player_indices:
+            if time(game, player_index, word_index) < boss_time:
+                boss_time = time(game, player_index, word_index)
+                boss_player = player_index
+        data[boss_player].append(word_at(game, word_index))
+    return data
     # END PROBLEM 10
 
 
@@ -324,6 +370,7 @@ def game_string(game):
 
 
 enable_multiplayer = False  # Change to True when you're ready to race.
+
 
 ##########################
 # Command Line Interface #
