@@ -16,7 +16,7 @@
 |  ✅   | 10. Decorator + Containers              |       |          |                               |
 |  ✅   | 11. Data Abstraction                    |       |          |                               |
 |  ✅   | 12. Dictionaries, Trees                 |       |          | Autocorrected Typing Software |
-|      | 13. Mutable Values                      | Lab05 |          |                               |
+|  ✅   | 13. Mutable Values                      | Lab05 |          |                               |
 |      | 14. List mutation + Identity + Nonlocal |       |          |                               |
 |      | 15. Iterators + Generators              |       |   HW04   |                               |
 |      | 16. Objects + Classes                   | Lab06 |          |                               |
