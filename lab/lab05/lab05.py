@@ -1,3 +1,6 @@
+import math
+
+
 def couple(s, t):
     """Return a list of two-element lists in which the i-th element is [s[i], t[i]].
 
@@ -11,7 +14,7 @@ def couple(s, t):
     [['c', 's'], [6, '1']]
     """
     assert len(s) == len(t)
-    "*** YOUR CODE HERE ***"
+    return [[s[i], t[i]] for i in range(len(s))]
 
 
 from math import sqrt
@@ -28,7 +31,9 @@ def distance(city_a, city_b):
     >>> distance(city_c, city_d)
     5.0
     """
-    "*** YOUR CODE HERE ***"
+    lat_a, lat_b = map(get_lat, (city_a, city_b))
+    lon_a, lon_b = map(get_lon, (city_a, city_b))
+    return math.sqrt((lat_a - lat_b) ** 2 + (lon_a - lon_b) ** 2)
 
 
 def closer_city(lat, lon, city_a, city_b):
@@ -46,7 +51,8 @@ def closer_city(lat, lon, city_a, city_b):
     >>> closer_city(41.29, 174.78, bucharest, vienna)
     'Bucharest'
     """
-    "*** YOUR CODE HERE ***"
+    city = make_city("Target", lat, lon)
+    return get_name(city_a if distance(city, city_a) < distance(city, city_b) else city_b)
 
 
 def check_city_abstraction():
@@ -151,7 +157,10 @@ def berry_finder(t):
     >>> berry_finder(t)
     True
     """
-    "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return label(t) == 'berry'
+
+    return label(t) == 'berry' or bool([True for branch in branches(t) if berry_finder(branch)])
 
 
 def sprout_leaves(t, leaves):
@@ -187,7 +196,15 @@ def sprout_leaves(t, leaves):
           1
           2
     """
-    "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        # considering multiple kinds of input format
+        if not is_tree(leaves[0]):
+            return tree(label(t), [tree(leave) for leave in leaves])
+        else:
+            return tree(label(t), leaves)
+
+    else:
+        return tree(label(t), [sprout_leaves(branch, leaves) for branch in branches(t)])
 
 
 # Abstraction tests for sprout_leaves and berry_finder
@@ -249,7 +266,7 @@ def coords(fn, seq, lower, upper):
     [[-2, 4], [1, 1], [3, 9]]
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return [[x, fn(x)] for x in seq if lower <= fn(x) <= upper]
 
 
 def riffle(deck):
@@ -262,7 +279,7 @@ def riffle(deck):
     [0, 10, 1, 11, 2, 12, 3, 13, 4, 14, 5, 15, 6, 16, 7, 17, 8, 18, 9, 19]
     """
     "*** YOUR CODE HERE ***"
-    return _______
+    return [deck[i // 2 if i % 2 == 0 else i // 2 + len(deck) // 2] for i in range(len(deck))]
 
 
 def add_trees(t1, t2):
@@ -300,7 +317,36 @@ def add_trees(t1, t2):
         5
       5
     """
-    "*** YOUR CODE HERE ***"
+
+    if is_leaf(t1) and is_leaf(t2):
+        return tree(
+            label(t1) + label(t2)
+        )
+
+    if is_leaf(t1) and not is_leaf(t2):
+        return tree(
+            label(t1) + label(t2),
+            branches(t2)
+        )
+
+    if is_leaf(t2) and not is_leaf(t1):
+        return tree(
+            label(t1) + label(t2),
+            branches(t1)
+        )
+
+    tt1s, tt2s = map(branches, (t1, t2))
+    merge_branches = []
+    for i in range(max(len(tt1s), len(tt2s))):
+        # default: virtual node
+        tt1 = tt1s[i] if i < len(tt1s) else tree(0)
+        tt2 = tt2s[i] if i < len(tt2s) else tree(0)
+        merge_branches.append(add_trees(tt1, tt2))
+
+    return tree(
+        label(t1) + label(t2),
+        merge_branches
+    )
 
 
 def build_successors_table(tokens):
@@ -321,8 +367,8 @@ def build_successors_table(tokens):
     prev = '.'
     for word in tokens:
         if prev not in table:
-            "*** YOUR CODE HERE ***"
-        "*** YOUR CODE HERE ***"
+            table[prev] = []
+        table[prev].append(word)
         prev = word
     return table
 
@@ -340,7 +386,8 @@ def construct_sent(word, table):
     import random
     result = ''
     while word not in ['.', '!', '?']:
-        "*** YOUR CODE HERE ***"
+        result = result + " " + word
+        word = random.choice(table[word])
     return result.strip() + word
 
 
@@ -356,8 +403,8 @@ def shakespeare_tokens(path='shakespeare.txt', url='http://composingprograms.com
 
 
 # Uncomment the following two lines
-# tokens = shakespeare_tokens()
-# table = build_successors_table(tokens)
+tokens = shakespeare_tokens()
+table = build_successors_table(tokens)
 
 
 def random_sent():
