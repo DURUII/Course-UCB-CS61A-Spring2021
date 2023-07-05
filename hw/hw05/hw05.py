@@ -1,3 +1,7 @@
+from typing import List
+import math
+
+
 class VendingMachine:
     """A vending machine that vends some product for some price.
 
@@ -35,7 +39,45 @@ class VendingMachine:
     >>> w.vend()
     'Here is your soda.'
     """
-    "*** YOUR CODE HERE ***"
+
+    def __init__(self, product: str, price: int, stock=0):
+        self.product = product
+        self.price = price
+        self.stock = stock
+        self.has_put = 0
+
+    def vend(self):
+        if self.stock < 1:
+            msg = 'Inventory empty. Restocking required.'
+            return msg
+
+        if self.has_put < self.price:
+            msg = f'You must add ${self.price - self.has_put} more funds.'
+            return msg
+
+        elif self.has_put > self.price:
+            msg = f'Here is your {self.product} and ${self.has_put - self.price} change.'
+
+        else:
+            msg = f'Here is your {self.product}.'
+
+        self.stock -= 1
+        self.has_put = 0
+        return msg
+
+    def add_funds(self, coin):
+        self.has_put += coin
+
+        if self.stock < 1:
+            msg = f'Inventory empty. Restocking required. Here is your ${self.has_put}.'
+            self.has_put = 0
+            return msg
+
+        return f'Current balance: ${self.has_put}'
+
+    def restock(self, num):
+        self.stock += num
+        return f'Current {self.product} stock: {self.stock}'
 
 
 def store_digits(n):
@@ -53,7 +95,19 @@ def store_digits(n):
     >>> cleaned = re.sub(r"#.*\\n", '', re.sub(r'"{3}[\s\S]*?"{3}', '', inspect.getsource(store_digits)))
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
-    "*** YOUR CODE HERE ***"
+    if n <= 9:
+        return Link(n)
+
+    def num_digits(x):
+        if x < 10:
+            return 1
+        return num_digits(x // 10) + num_digits(x % 10)
+
+    num = num_digits(n)
+    return Link(
+        first=n // (10 ** (num - 1)),
+        rest=store_digits(n % (10 ** (num - 1)))
+    )
 
 
 def path_yielder(t, value):
@@ -91,12 +145,15 @@ def path_yielder(t, value):
     [[0, 2], [0, 2, 1, 2]]
     """
 
-    "*** YOUR CODE HERE ***"
+    # leaf/non-leaf and target found
+    if t.label == value:
+        yield [value]
 
-    for _______________ in _________________:
-        for _______________ in _________________:
-
-            "*** YOUR CODE HERE ***"
+    # drill down
+    for branch in t.branches:
+        for sub_path in path_yielder(branch, value):
+            # n.b. extend return None
+            yield [t.label] + sub_path
 
 
 class Mint:
@@ -131,21 +188,25 @@ class Mint:
     current_year = 2020
 
     def __init__(self):
+        self.year = 0
         self.update()
+        print("DEBUG:", self.year)
 
     def create(self, kind):
-        "*** YOUR CODE HERE ***"
+        return kind(self.year)
 
     def update(self):
-        "*** YOUR CODE HERE ***"
+        self.year = self.current_year
 
 
 class Coin:
+    cents = 0
+
     def __init__(self, year):
         self.year = year
 
     def worth(self):
-        "*** YOUR CODE HERE ***"
+        return self.cents + max(Mint.current_year - self.year - 50, 0)
 
 
 class Nickel(Coin):
@@ -181,7 +242,29 @@ def is_bst(t):
     >>> is_bst(t7)
     False
     """
-    "*** YOUR CODE HERE ***"
+
+    def check(root, lower_bound, upper_bound):
+        """
+        check if the label of a root is within [lower_bound, upper_bound]
+        n.b. the description of this problem allows the children to be equal to their parents
+        """
+        if len(root.branches) > 2 or root.label > upper_bound or root.label < lower_bound:
+            return False
+
+        if root.is_leaf():
+            return True
+
+        if len(root.branches) == 1:
+            left = root.branches[0]
+            right = left
+            return check(left, lower_bound, root.label) \
+                or check(right, root.label, upper_bound)
+
+        left, right = root.branches
+        return check(left, lower_bound, root.label) \
+            and check(right, root.label, upper_bound)
+
+    return check(t, -math.inf, math.inf)
 
 
 def preorder(t):
@@ -194,7 +277,13 @@ def preorder(t):
     >>> preorder(Tree(2, [Tree(4, [Tree(6)])]))
     [2, 4, 6]
     """
-    "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        return [t.label]
+
+    traversal = [t.label]
+    for branch in t.branches:
+        traversal.extend(preorder(branch))
+    return traversal
 
 
 def generate_preorder(t):
@@ -208,7 +297,10 @@ def generate_preorder(t):
     >>> list(gen)
     [2, 3, 4, 5, 6, 7]
     """
-    "*** YOUR CODE HERE ***"
+    yield t.label
+    for branch in t.branches:
+        for i in preorder(branch):
+            yield i
 
 
 class Link:
@@ -286,4 +378,5 @@ class Tree:
             for b in t.branches:
                 tree_str += print_tree(b, indent + 1)
             return tree_str
+
         return print_tree(self).rstrip()
