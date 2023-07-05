@@ -20,7 +20,7 @@
 |  ✅   | 14. List mutation + Identity + Nonlocal |          |          |                               |
 |  ✅   | 15. Iterators + Generators              |          |   HW04   |                               |
 |  ✅   | 16. Objects + Classes                   |  Lab06   |          |                               |
-|      | 17. Inheritance + Composition           |          |          |     Ants Vs. SomeBees ⚠️      |
+|  ✅   | 17. Inheritance + Composition           |          |          |     Ants Vs. SomeBees ⚠️      |
 |  ✅   | 18. Special Object Methods              |          |   HW05   |                               |
 |  ✅   | 19. Recursive Objects                   | Lab07 ⚠️ |          |                               |
 |  ✅   | 20. Complexity                          |          |          |                               |
