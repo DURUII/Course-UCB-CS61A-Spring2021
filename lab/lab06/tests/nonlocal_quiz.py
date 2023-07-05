@@ -5,7 +5,7 @@ test = {
     {
       'cases': [
         {
-          'answer': '55fd3e5f4f226790ab44943e3e633474',
+          'answer': 'This code will error',
           'choices': [
             '5',
             '2',
@@ -13,7 +13,7 @@ test = {
             'This code will error'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           What is the value returned by the function call ba(3)?
           >>> def ba(by):
@@ -26,7 +26,7 @@ test = {
           """
         },
         {
-          'answer': '73dc0de5202f020182ea500448cc846a',
+          'answer': '5',
           'choices': [
             '5',
             '2',
@@ -34,7 +34,7 @@ test = {
             'This code will error'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           What is the value returned by the function call ba(3)?
           >>> def ba(by):
@@ -48,7 +48,7 @@ test = {
           """
         },
         {
-          'answer': 'a06dbad8160b15bdcd6c55fe942aa898',
+          'answer': '[1, 2, 3, 5]',
           'choices': [
             '[1, 2, 3, 5]',
             '[1, 2, 3]',
@@ -56,7 +56,7 @@ test = {
             'This code will error'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           What is the value returned by the function call ba([1, 2, 3])?
           >>> def ba(by):
@@ -69,7 +69,7 @@ test = {
           """
         },
         {
-          'answer': 'f6b228b9600512664524ace9bb20487f',
+          'answer': '10',
           'choices': [
             '5',
             '10',
@@ -77,7 +77,7 @@ test = {
             'This code will error'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           What is the value returned by the function call ba(5)?
           >>> def ba(by):

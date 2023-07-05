@@ -15,7 +15,18 @@ def insert_items(lst, entry, elem):
     >>> large_lst3 is large_lst
     True
     """
-    "*** YOUR CODE HERE ***"
+    # # non-destructive
+    # modified = []
+    # for i in lst:
+    #     modified.append(i)
+    #     if i == entry:
+    #         modified.append(elem)
+    # return modified
+
+    target_points = [i + 1 for i in range(len(lst)) if lst[i] == entry]
+    for i, p in enumerate(target_points):
+        lst.insert(i + p, elem)
+    return lst
 
 
 def naturals():
@@ -47,7 +58,11 @@ def scale(it, multiplier):
     >>> [next(m) for _ in range(5)]
     [2, 4, 6, 8, 10]
     """
-    "*** YOUR CODE HERE ***"
+    it = iter(it)
+    x = next(it, None)
+    while x:
+        yield x * multiplier
+        x = next(it, None)
 
 
 def hailstone(n):
@@ -64,4 +79,7 @@ def hailstone(n):
     2
     1
     """
-    "*** YOUR CODE HERE ***"
+    yield n
+    while n != 1:
+        n = n // 2 if n % 2 == 0 else 3 * n + 1
+        yield n
