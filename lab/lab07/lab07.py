@@ -1,3 +1,6 @@
+from collections import deque
+
+
 def convert_link(link):
     """Takes a linked list and returns a Python list with the same elements.
 
@@ -7,7 +10,12 @@ def convert_link(link):
     >>> convert_link(Link.empty)
     []
     """
-    "*** YOUR CODE HERE ***"
+    if link is Link.empty:
+        return []
+
+    result = [link.first]
+    result.extend(convert_link(link.rest))
+    return result
 
 
 def cumulative_mul(t):
@@ -19,7 +27,18 @@ def cumulative_mul(t):
     >>> t
     Tree(105, [Tree(15, [Tree(5)]), Tree(7)])
     """
-    "*** YOUR CODE HERE ***"
+
+    def mutate(t):
+        if t.is_leaf():
+            return t
+
+        for branch in t.branches:
+            branch = mutate(branch)
+            t.label *= branch.label
+
+        return t
+
+    mutate(t)
 
 
 def has_cycle(link):
@@ -36,7 +55,19 @@ def has_cycle(link):
     >>> has_cycle(u)
     False
     """
-    "*** YOUR CODE HERE ***"
+    seen = set({})
+
+    def iterate(link):
+        if link is Link.empty:
+            return False
+
+        if link in seen:
+            return True
+
+        seen.add(link)
+        return iterate(link.rest)
+
+    return iterate(link)
 
 
 def has_cycle_constant(link):
@@ -50,7 +81,12 @@ def has_cycle_constant(link):
     >>> has_cycle_constant(t)
     False
     """
-    "*** YOUR CODE HERE ***"
+    fast, slow = link, link
+    while fast is not Link.empty and fast.rest is not Link.empty:
+        fast, slow = fast.rest.rest, slow.rest
+        if fast == slow:
+            return True
+    return False
 
 
 def every_other(s):
@@ -70,7 +106,13 @@ def every_other(s):
     >>> singleton
     Link(4)
     """
-    "*** YOUR CODE HERE ***"
+    ptr = s
+    while ptr.rest is not Link.empty and ptr.rest.rest is not Link.empty:
+        ptr.rest = ptr.rest.rest
+        ptr = ptr.rest
+
+    if ptr.rest is not Link.empty:
+        ptr.rest = Link.empty
 
 
 def reverse_other(t):
@@ -86,7 +128,18 @@ def reverse_other(t):
     >>> t
     Tree(1, [Tree(8, [Tree(3, [Tree(5), Tree(4)]), Tree(6, [Tree(7)])]), Tree(2)])
     """
-    "*** YOUR CODE HERE ***"
+    queue = deque([(t, 1)])
+    while queue:
+        parent, layer = queue.popleft()
+        children = parent.branches
+
+        if layer % 2 == 1:
+            for i in range(len(children)//2):
+                j = len(children)-1-i
+                children[i].label, children[j].label = children[j].label, children[i].label
+
+        for i in children:
+            queue.append((i, layer+1))
 
 
 class Link:
