@@ -7,7 +7,10 @@ def insert_into_all(item, nested_list):
     >>> insert_into_all(0, nl)
     [[0], [0, 1, 2], [0, 3]]
     """
-    "*** YOUR CODE HERE ***"
+    return [
+        [item] + seq
+        for seq in nested_list
+    ]
 
 
 def subseqs(s):
@@ -20,11 +23,11 @@ def subseqs(s):
     >>> subseqs([])
     [[]]
     """
-    if ________________:
-        ________________
-    else:
-        ________________
-        ________________
+    if len(s) == 0:
+        return [[]]
+
+    subsets = subseqs(s[1:])
+    return subsets + insert_into_all(s[0], subsets)
 
 
 def non_decrease_subseqs(s):
@@ -43,14 +46,16 @@ def non_decrease_subseqs(s):
     """
     def subseq_helper(s, prev):
         if not s:
-            return ____________________
+            return [[]]
         elif s[0] < prev:
-            return ____________________
+            # n.b the slight difference between [[]] and []
+            return [[]]
         else:
-            a = ______________________
-            b = ______________________
-            return insert_into_all(________, ______________) + ________________
-    return subseq_helper(____, ____)
+            a = subseq_helper(s[1:], s[0])
+            b = subseq_helper(s[1:], prev)
+            return insert_into_all(s[0], a) + b
+
+    return subseq_helper(s, -1)
 
 
 def num_trees(n):
@@ -73,7 +78,19 @@ def num_trees(n):
     429
 
     """
-    "*** YOUR CODE HERE ***"
+    memo = {1: 1, 2: 1}
+
+    def compute(n):
+        if n in memo:
+            return memo[n]
+
+        result = 0
+        for i in range(1, n):
+            result += compute(i)*compute(n-i)
+        memo[n] = result
+        return result
+
+    return compute(n)
 
 
 def merge(incr_a, incr_b):
@@ -95,7 +112,30 @@ def merge(incr_a, incr_b):
     """
     iter_a, iter_b = iter(incr_a), iter(incr_b)
     next_a, next_b = next(iter_a, None), next(iter_b, None)
-    "*** YOUR CODE HERE ***"
+    while next_a is not None and next_b is not None:
+        if next_a < next_b:
+            yield next_a
+            next_a = next(iter_a, None)
+
+        elif next_a > next_b:
+            yield next_b
+            next_b = next(iter_b, None)
+
+        else:
+            skip_value = next_a
+            yield skip_value
+            while next_a == skip_value:
+                next_a = next(iter_a, None)
+            while next_b == skip_value:
+                next_b = next(iter_b, None)
+
+    while next_a is not None:
+        yield next_a
+        next_a = next(iter_a, None)
+
+    while next_b is not None:
+        yield next_b
+        next_b = next(iter_b, None)
 
 
 class Button:
@@ -136,26 +176,25 @@ class Keyboard:
     """
 
     def __init__(self, *args):
-        ________________
-        for _________ in ________________:
-            ________________
+        self.buttons = {}
+        for btn in args:
+            self.buttons[btn.pos] = btn
 
     def press(self, info):
         """Takes in a position of the button pressed, and
         returns that button's output"""
-        if ____________________:
-            ________________
-            ________________
-            ________________
-        ________________
+        if info in self.buttons:
+            self.buttons[info].times_pressed += 1
+            return self.buttons[info].key
+        return ''
 
     def typing(self, typing_input):
         """Takes in a list of positions of buttons pressed, and
         returns the total output"""
-        ________________
-        for ________ in ____________________:
-            ________________
-        ________________
+        output = ''
+        for info in typing_input:
+            output = output+self.press(info)
+        return output
 
 
 class Account:
@@ -185,25 +224,32 @@ class Account:
     def __init__(self, account_holder):
         self.balance = 0
         self.holder = account_holder
-        "*** YOUR CODE HERE ***"
+        self.transactions = []
 
     def deposit(self, amount):
         """Increase the account balance by amount, add the deposit
         to the transaction history, and return the new balance.
         """
-        "*** YOUR CODE HERE ***"
+        self.balance += amount
+        self.transactions.append(('deposit', amount))
+        return self.balance
 
     def withdraw(self, amount):
         """Decrease the account balance by amount, add the withdraw
         to the transaction history, and return the new balance.
         """
-        "*** YOUR CODE HERE ***"
+        assert self.balance >= amount
+        self.balance -= amount
+        self.transactions.append(('withdraw', amount))
+        return self.balance
 
     def __str__(self):
-        "*** YOUR CODE HERE ***"
+        return f"{self.holder}'s Balance: ${self.balance}"
 
     def __repr__(self):
-        "*** YOUR CODE HERE ***"
+        len_deposits = len(
+            list(filter(lambda t: t[0] == "deposit", self.transactions)))
+        return f"Accountholder: {self.holder}, Deposits: {len_deposits}, Withdraws: {len(self.transactions)-len_deposits}"
 
 
 def trade(first, second):
@@ -235,9 +281,11 @@ def trade(first, second):
     """
     m, n = 1, 1
 
-    equal_prefix = lambda: ______________________
-    while _______________________________:
-        if __________________:
+    def equal_prefix():
+        return sum(first[:m]) == sum(second[:n])
+
+    while not equal_prefix() and (m < len(first) or n < len(second)):
+        if sum(first[:m]) < sum(second[:n]) and m < len(first):
             m += 1
         else:
             n += 1
@@ -275,11 +323,11 @@ def shuffle(cards):
     ['A♡', 'A♢', 'A♤', 'A♧', '2♡', '2♢', '2♤', '2♧', '3♡', '3♢', '3♤', '3♧']
     """
     assert len(cards) % 2 == 0, 'len(cards) must be even'
-    half = _______________
+    half = len(cards) // 2
     shuffled = []
-    for i in _____________:
-        _________________
-        _________________
+    for i in range(half):
+        shuffled.append(cards[i])
+        shuffled.append(cards[i+half])
     return shuffled
 
 
@@ -303,7 +351,18 @@ def insert(link, value, index):
         ...
     IndexError: Out of bounds!
     """
-    "*** YOUR CODE HERE ***"
+    link.first, link.rest = 0, Link(link.first, link.rest)
+
+    pointer = link
+    while index != 0:
+        pointer = pointer.rest
+        index -= 1
+
+        if pointer is Link.empty or pointer.rest is Link.empty:
+            raise IndexError('Out of bounds!')
+
+    pointer.rest = Link(value, pointer.rest)
+    link.first, link.rest = link.rest.first, link.rest.rest
 
 
 def deep_len(lnk):
@@ -320,12 +379,12 @@ def deep_len(lnk):
     >>> deep_len(levels)
     5
     """
-    if ______________:
+    if isinstance(lnk, tuple):
         return 0
-    elif ______________:
+    elif isinstance(lnk, int):
         return 1
     else:
-        return _________________________
+        return deep_len(lnk.first)+deep_len(lnk.rest)
 
 
 def make_to_string(front, mid, back, empty_repr):
@@ -344,10 +403,10 @@ def make_to_string(front, mid, back, empty_repr):
     '()'
     """
     def printer(lnk):
-        if ______________:
-            return _________________________
+        if lnk is Link.empty:
+            return empty_repr
         else:
-            return _________________________
+            return f"{front}{lnk.first}{mid}{printer(lnk.rest)}{back}"
     return printer
 
 
@@ -368,11 +427,11 @@ def prune_small(t, n):
     >>> t3
     Tree(6, [Tree(1), Tree(3, [Tree(1), Tree(2)])])
     """
-    while ___________________________:
-        largest = max(_______________, key=____________________)
-        _________________________
-    for __ in _____________:
-        ___________________
+    while len(t.branches) > n:
+        largest = max(t.branches, key=lambda t: t.label)
+        t.branches.remove(largest)
+    for branch in t.branches:
+        prune_small(branch, n)
 
 
 def long_paths(t, n):
@@ -425,7 +484,17 @@ def long_paths(t, n):
     >>> long_paths(whole, 4)
     [[0, 11, 12, 13, 14]]
     """
-    "*** YOUR CODE HERE ***"
+    def paths(t):
+        if t.is_leaf():
+            return [[t.label]]
+
+        result = []
+        for branch in t.branches:
+            for path in paths(branch):
+                result.append([t.label]+path)
+        return result
+
+    return list(filter(lambda path: len(path) > n, paths(t)))
 
 
 class Link:
