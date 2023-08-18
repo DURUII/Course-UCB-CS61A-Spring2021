@@ -5,7 +5,7 @@ test = {
     {
       'cases': [
         {
-          'answer': '9bdaf9d21c5bc25bc5b465def43443fc',
+          'answer': 'instance, each HungryAnt instance chews independently of other HungryAnt instances',
           'choices': [
             r"""
             instance, each HungryAnt instance chews independently of other
@@ -19,11 +19,11 @@ test = {
             'class, all HungryAnt instances in the game chew simultaneously'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'Should chewing be an instance or class attribute? Why?'
         },
         {
-          'answer': '23bd482fec0fa90b0d41df758f1a941e',
+          'answer': 'When it is not chewing, i.e. when its chewing attribute is 0',
           'choices': [
             'When it is not chewing, i.e. when its chewing attribute is 0',
             'When it is chewing, i.e. when its chewing attribute is at least 1',
@@ -31,11 +31,11 @@ test = {
             'Whenever a Bee is in its place'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'When is a HungryAnt able to eat a Bee?'
         },
         {
-          'answer': '30589d40710d13dfd27efd5cdd28c0f0',
+          'answer': 'A random Bee in the same place as itself',
           'choices': [
             'A random Bee in the same place as itself',
             'The closest Bee in front of it',
@@ -43,7 +43,7 @@ test = {
             'The closest Bee in either direction'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'When a HungryAnt is able to eat, which Bee does it eat?'
         }
       ],
@@ -57,14 +57,12 @@ test = {
           >>> # Testing HungryAnt parameters
           >>> hungry = HungryAnt()
           >>> HungryAnt.food_cost
-          c9452203eb0b0f0bd2454586a6c2fc5c
-          # locked
+          4
           >>> hungry.health
-          d89cf7c79d5a479b0f636734143ed5e6
-          # locked
+          1
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
@@ -96,22 +94,19 @@ test = {
           >>> place.add_insect(bee1)         # Add the Bee to the same place as HungryAnt
           >>> hungry.action(gamestate)
           >>> bee1.health
-          73b94a1326ae2e803c3421016112207b
-          # locked
+          0
           >>> bee2 = Bee(1)                 # A Bee with 1 health
           >>> place.add_insect(bee2)
           >>> for _ in range(3):
           ...     hungry.action(gamestate)     # Digesting...not eating
           >>> bee2.health
-          d89cf7c79d5a479b0f636734143ed5e6
-          # locked
+          1
           >>> hungry.action(gamestate)
           >>> bee2.health
-          73b94a1326ae2e803c3421016112207b
-          # locked
+          0
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
