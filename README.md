@@ -20,15 +20,15 @@
 |  ✅   | 14. List mutation + Identity + Nonlocal |       |          |                               |
 |  ✅   | 15. Iterators + Generators              |       |   HW04   |                               |
 |  ✅   | 16. Objects + Classes                   | Lab06 |          |                               |
-|  ✅   | 17. Inheritance + Composition           |       |          |     Ants Vs. SomeBees ⚠️      |
+|  ✅   | 17. Inheritance + Composition           |       |          |       Ants Vs. SomeBees       |
 |  ✅   | 18. Special Object Methods              |       |   HW05   |                               |
 |  ✅   | 19. Recursive Objects                   | Lab07 |          |                               |
 |  ✅   | 20. Complexity                          |       |          |                               |
 |  ✅   | 21. Memoization                         |       |          |                               |
 |  ✅   | 22. Generics                            | Lab08 |          |                               |
-| ️ ✅  | 23. Fun with Iterables                  |       |          |                               |
-|  ✈️  | 24. Scheme                              | Lab10 |   HW06   |                               |
-|      | 25. Scheme Examples                     |       |          |                               |
+|  ✅   | 23. Fun with Iterables                  |       |          |                               |
+|  ✅   | 24. Scheme                              | Lab10 |   HW06   |                               |
+|  ✅   | 25. Scheme Examples                     |       |          |                               |
 |      | 26. Calculator                          |       |   HW07   |                               |
 |      | 27. Interpreters                        | Lab11 |          |                               |
 |      | 28. Undecidability (optional)           |       |          |      Scheme Interpreter       |
