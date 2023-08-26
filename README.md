@@ -29,8 +29,8 @@
 |  ✅   | 23. Fun with Iterables                  |       |          |                               |
 |  ✅   | 24. Scheme                              | Lab10 |   HW06   |                               |
 |  ✅   | 25. Scheme Examples                     |       |          |                               |
-|      | 26. Calculator                          |       |   HW07   |                               |
-|      | 27. Interpreters                        | Lab11 |          |                               |
+|  ✅    | 26. Calculator                          |       |   HW07   |                               |
+|  ✅    | 27. Interpreters                        | Lab11 |          |                               |
 |      | 28. Undecidability (optional)           |       |          |      Scheme Interpreter       |
 |      | 29. Macros                              |       |   HW08   |                               |
 |      | 30. Declarative Programming             | Lab12 |          |                               |
@@ -51,3 +51,4 @@
 - Lecture 21: Memoization(avoid redundant computations) and Dynamic Programming(do in order without ever having to test
   to make sure that everything is available before)
 - Proj03: Optional Problem 2
+- HW07: Without Duplicates
