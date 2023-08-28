@@ -1,5 +1,13 @@
 (define (accumulate-tail combiner start n term)
-  'YOUR-CODE-HERE)
+    (define (helper n so-far)
+        (cond 
+              ((= n 0) so-far)
+              (else (helper (- n 1) (combiner so-far (term n))))
+        )
+    )
+    
+    (helper n start)
+)
 
 (define (cadr s) (car (cdr s)))
 
@@ -71,17 +79,51 @@
 
 (define (second-operand p) (caddr p))
 
-(define (derive-sum expr var) 'YOUR-CODE-HERE)
+(define (derive-sum expr var)
+    (cond 
+        ((sum? expr) 
+            (make-sum (derive (first-operand expr) var) (derive (second-operand expr) var))
+        )
+        (else 'Error)
+    )
+)
 
-(define (derive-product expr var) 'YOUR-CODE-HERE)
+(define (derive-product expr var)
+    (cond 
+        ((product? expr)
+            (make-sum
+                (make-product (derive (first-operand expr) var) (second-operand expr))
+                (make-product (first-operand expr) (derive (second-operand expr) var) )
+            )
+        )
+        (else 'Error)
+    )
+)
 
 ; Exponentiations are represented as lists that start with ^.
-(define (make-exp base exponent) 'YOUR-CODE-HERE)
+(define (make-exp base exponent)
+    (cond 
+        ((= exponent 0) 1)
+        ((= exponent 1) base)
+        ((number? base) (expt base exponent))
+        ((number? exponent) (list '^ base exponent))
+        (else 'Error)
+    )
+)
 
-(define (exp? exp) 'YOUR-CODE-HERE)
+(define (exp? exp)
+    (and (list? exp) (eqv? (car exp) '^))
+)
 
 (define x^2 (make-exp 'x 2))
 
 (define x^3 (make-exp 'x 3))
 
-(define (derive-exp exp var) 'YOUR-CODE-HERE)
+(define (derive-exp exp var)
+    (cond 
+        ((and (exp? exp) (number? (second-operand exp)))
+            (make-product (second-operand exp) (make-exp (first-operand exp) (- (second-operand exp) 1)))
+        )
+        (else 'Error)
+    )
+)
