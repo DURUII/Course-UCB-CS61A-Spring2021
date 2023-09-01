@@ -5,7 +5,7 @@ test = {
     {
       'cases': [
         {
-          'answer': 'ceb66eb925d7e8e2992dc909b43fe073',
+          'answer': 'add()',
           'choices': [
             'add(1, 2)',
             'sub(3, 4)',
@@ -13,11 +13,11 @@ test = {
             'add()'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'Which of the following expressions would NOT be parsable according to this BNF?'
         },
         {
-          'answer': '79f9518fbc9a1791f267d64e63c6e293',
+          'answer': 'add(10, 20)',
           'choices': [
             'add(a, b)',
             'add("a", "b")',
@@ -25,11 +25,11 @@ test = {
             'All of these'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'Which of these expressions WOULD be parsable according to this BNF?'
         },
         {
-          'answer': '2ee0d14b436fb92b3d0bf7c7bf76cb08',
+          'answer': 'FUNCNAME: "add" | "mul" | "sub"',
           'choices': [
             'pycomb_call: func "(" arg ("," arg)* ")"',
             'arg: pycomb_call | NUMBER',
@@ -37,11 +37,11 @@ test = {
             'FUNCNAME: "add" | "mul" | "sub"'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'What line of the BNF should we modify to add support for a "div" operation?'
         },
         {
-          'answer': '840de28c224a2b2126746de68288bdbb',
+          'answer': 'both FUNCNAME and NUMBER',
           'choices': [
             'pycomb_call',
             'arg',
@@ -52,7 +52,7 @@ test = {
             'All of these'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'Which of the following are considered a terminal?'
         }
       ],

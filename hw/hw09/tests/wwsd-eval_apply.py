@@ -5,7 +5,7 @@ test = {
     {
       'cases': [
         {
-          'answer': '17c904758d7c0462b49135eebe9c3ca4',
+          'answer': '6',
           'choices': [
             '1',
             '2',
@@ -15,11 +15,11 @@ test = {
             '8'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'How many calls are made to scheme_eval to evaluate the expression: (+ 2 4 6 8) ?'
         },
         {
-          'answer': 'd7ab3c9f4f7487833d3cb935fc8c712a',
+          'answer': '1',
           'choices': [
             '1',
             '2',
@@ -29,11 +29,11 @@ test = {
             '8'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'How many calls are made to scheme_apply: (+ 2 4 6 8) ?'
         },
         {
-          'answer': '1f7858498ce9c3b635426bdfd8df1078',
+          'answer': '10',
           'choices': [
             '3',
             '7',
@@ -43,11 +43,11 @@ test = {
             '13'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'How many calls are made to scheme_eval: (+ 2 (* 4 (- 6 8))) ?'
         },
         {
-          'answer': 'd17a76b23ca9a0f23c264eaf1fedfa70',
+          'answer': '3',
           'choices': [
             '3',
             '7',
@@ -57,11 +57,11 @@ test = {
             '13'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'How many calls are made to scheme_apply: (+ 2 (* 4 (- 6 8))) ?'
         },
         {
-          'answer': '17c904758d7c0462b49135eebe9c3ca4',
+          'answer': '6',
           'choices': [
             '1',
             '2',
@@ -71,11 +71,11 @@ test = {
             '10'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'How many calls are made to scheme_eval: (if #f (+ 2 3) (+ 1 2)) ?'
         },
         {
-          'answer': 'd7ab3c9f4f7487833d3cb935fc8c712a',
+          'answer': '1',
           'choices': [
             '1',
             '2',
@@ -85,11 +85,11 @@ test = {
             '10'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'How many calls are made to scheme_apply: (if #f (+ 2 3) (+ 1 2)) ?'
         },
         {
-          'answer': 'd7ab3c9f4f7487833d3cb935fc8c712a',
+          'answer': '1',
           'choices': [
             '0',
             '1',
@@ -99,11 +99,11 @@ test = {
             '9'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'How many calls are made to scheme_eval: (define (cube a) (* a a a)) ?'
         },
         {
-          'answer': '023f53b43f605b7580be5aa5c3e5ee7e',
+          'answer': '0',
           'choices': [
             '0',
             '1',
@@ -113,11 +113,11 @@ test = {
             '9'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'How many calls are made to scheme_apply: (define (cube a) (* a a a)) ?'
         },
         {
-          'answer': '5ccd251f8efaf1413d8d9a6429728bd6',
+          'answer': '8',
           'choices': [
             '2',
             '3',
@@ -127,11 +127,11 @@ test = {
             '11'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'How many calls are made to scheme_eval: (cube 3) ?'
         },
         {
-          'answer': '3940351fe1ecdc23ea60a8fdad9aa11d',
+          'answer': '2',
           'choices': [
             '2',
             '3',
@@ -141,7 +141,7 @@ test = {
             '11'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'How many calls are made to scheme_apply: (cube 3) ?'
         }
       ],
