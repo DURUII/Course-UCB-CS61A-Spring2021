@@ -1,10 +1,23 @@
-(define (tail-replicate x n) 'YOUR-CODE-HERE)
+(define (tail-replicate x n)
+  (define (helper n so-far)
+    (cond 
+      ((= n 0) so-far)
+      (else (helper (- n 1) (cons x so-far)))
+    )
+  )
+
+  (helper n '())
+)
 
 (define-macro (def func args body)
-  'YOUR-CODE-HERE)
+  `(define (,func ,@args) ,body)
+)
 
 (define (repeatedly-cube n x)
   (if (zero? n)
       x
-      (let (_________________________)
-        (* y y y))))
+      (let ((y (repeatedly-cube (- n 1) x)))
+        (* y y y)
+      )
+  )
+)
