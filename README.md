@@ -29,19 +29,19 @@
 |  ✅   | 23. Fun with Iterables                  |       |          |                               |
 |  ✅   | 24. Scheme                              | Lab10 |   HW06   |                               |
 |  ✅   | 25. Scheme Examples                     |       |          |                               |
-|  ✅    | 26. Calculator                          |       |   HW07   |                               |
-|  ✅    | 27. Interpreters                        | Lab11 |          |                               |
-|      | 28. Undecidability (optional)           |       |          |      Scheme Interpreter       |
-|      | 29. Macros                              |       |   HW08   |                               |
-|      | 30. Declarative Programming             | Lab12 |          |                               |
-|      | 31. Regular Expressions                 |       |          |                               |
-|      | 32. BNF: Backus-Naur Form               |       |   HW09   |                               |
-|      | 33. Review: Regular Expressions + BNF   | Lab13 |          |                               |
-|      | 34. Review: Scheme                      |       |          |                               |
-|      | 35. Intro to SQL (optional)             |       |          |                               |
-|      | 36. Review: Linked Lists + Trees        | Lab14 |          |                               |
-|      | 37. OOP: Review + Design                |       |          |                               |
-|      | 38. Conclusion                          |       |          |                               |
+|  😴    | 26. Calculator                          |       |   HW07   |                               |
+|  😴    | 27. Interpreters                        | Lab11 |          |                               |
+|  😴    | 28. Undecidability (optional)           |       |          |      Scheme Interpreter       |
+|  😴    | 29. Macros                              |       |   HW08   |                               |
+|  ✅    | 30. Declarative Programming             | Lab12 |          |                               |
+|  ✅    | 31. Regular Expressions                 |       |          |                               |
+|  ✅    | 32. BNF: Backus-Naur Form               |       |   HW09   |                               |
+|  ✅    | 33. Review: Regular Expressions + BNF   | Lab13 |          |                               |
+|  ✅    | 34. Review: Scheme                      |       |          |                               |
+|  ✅    | 35. Intro to SQL (optional)             |       |          |                               |
+|  ✅    | 36. Review: Linked Lists + Trees        | Lab14 |          |                               |
+|  ✅    | 37. OOP: Review + Design                |       |          |                               |
+|  ✅    | 38. Conclusion                          |       |          |                               |
 
 ## Thought-Provoking
 
