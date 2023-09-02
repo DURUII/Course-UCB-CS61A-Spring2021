@@ -17,7 +17,13 @@ def prune_min(t):
     >>> t3
     Tree(6, [Tree(3, [Tree(1)])])
     """
-    "*** YOUR CODE HERE ***"
+
+    if t.is_leaf():
+        return
+
+    l, r = t.branches
+    t.branches = [l if l.label < r.label else r]
+    prune_min(t.branches[0])
 
 
 def num_splits(s, d):
@@ -33,7 +39,29 @@ def num_splits(s, d):
     >>> num_splits([1, 4, 6, 8, 2, 9, 5], 3)
     12
     """
-    "*** YOUR CODE HERE ***"
+    count = 0
+    flags = [False for _ in range(len(s))]
+
+    def dfs(n):
+        nonlocal count, flags, s, d
+        if n >= len(s):
+            l, r = 0, 0
+            for (i, flag) in enumerate(flags):
+                if flag:
+                    l += s[i]
+                else:
+                    r += s[i]
+            if abs(l-r) <= d:
+                count += 1
+            return
+
+        flags[n] = True
+        dfs(n+1)
+        flags[n] = False
+        dfs(n+1)
+
+    dfs(0)
+    return count//2
 
 
 class Account:
@@ -64,24 +92,36 @@ class Account:
         self.balance = 0
         self.holder = account_holder
         "*** YOUR CODE HERE ***"
+        self.transactions = []
+        self.deposit_count, self.withdraw_count = 0, 0
 
     def deposit(self, amount):
         """Increase the account balance by amount, add the deposit
         to the transaction history, and return the new balance.
         """
         "*** YOUR CODE HERE ***"
+        self.balance += amount
+        self.transactions.append(('deposit', amount))
+        self.deposit_count += 1
+        return self.balance
 
     def withdraw(self, amount):
         """Decrease the account balance by amount, add the withdraw
         to the transaction history, and return the new balance.
         """
         "*** YOUR CODE HERE ***"
+        self.balance -= amount
+        self.transactions.append(('withdraw', amount))
+        self.withdraw_count += 1
+        return self.balance
 
     def __str__(self):
         "*** YOUR CODE HERE ***"
+        return f"{self.holder}'s Balance: ${self.balance}"
 
     def __repr__(self):
         "*** YOUR CODE HERE ***"
+        return f"Accountholder: {self.holder}, Deposits: {self.deposit_count}, Withdraws: {self.withdraw_count}"
 
 
 class CheckingAccount(Account):
@@ -111,11 +151,20 @@ class CheckingAccount(Account):
     def withdraw(self, amount):
         return Account.withdraw(self, amount + self.withdraw_fee)
 
-    "*** YOUR CODE HERE ***"
+    def deposit_check(self, check):
+        if check.holder != self.holder or check.deposited:
+            print("The police have been notified.")
+        else:
+            print(check.balance)
+            check.deposited = True
+            self.balance += check.balance
 
 
 class Check:
-    "*** YOUR CODE HERE ***"
+    def __init__(self, account_holder, balance):
+        self.holder = account_holder
+        self.balance = balance
+        self.deposited = False
 
 
 def align_skeleton(skeleton, code):
@@ -152,31 +201,34 @@ def align_skeleton(skeleton, code):
             cost: the cost of the corrections, in edits
         """
         if skeleton_idx == len(skeleton) and code_idx == len(code):
-            return _________, ______________
+            return "", 0
         if skeleton_idx < len(skeleton) and code_idx == len(code):
             edits = "".join(["-[" + c + "]" for c in skeleton[skeleton_idx:]])
-            return _________, ______________
+            return edits, len(skeleton)-skeleton_idx+1
         if skeleton_idx == len(skeleton) and code_idx < len(code):
             edits = "".join(["+[" + c + "]" for c in code[code_idx:]])
-            return _________, ______________
+            return edits, len(code)-code_idx+1
 
         possibilities = []
         skel_char, code_char = skeleton[skeleton_idx], code[code_idx]
         # Match
         if skel_char == code_char:
-            _________________________________________
-            _________________________________________
-            possibilities.append((_______, ______))
+            edits, cost = helper_align(skeleton_idx+1, code_idx+1)
+            edits = f"{skel_char}{edits}"
+            possibilities.append((edits, cost))
         # Insert
-        _________________________________________
-        _________________________________________
-        possibilities.append((_______, ______))
+        edits, cost = helper_align(skeleton_idx, code_idx+1)
+        edits = f"+[{code_char}]{edits}"
+        cost += 1
+        possibilities.append((edits, cost))
         # Delete
-        _________________________________________
-        _________________________________________
-        possibilities.append((_______, ______))
+        edits, cost = helper_align(skeleton_idx+1, code_idx)
+        edits = f"-[{skel_char}]{edits}"
+        cost += 1
+        possibilities.append((edits, cost))
         return min(possibilities, key=lambda x: x[1])
-    result, cost = ________________________
+
+    result, cost = helper_align(0, 0)
     return result
 
 
@@ -193,7 +245,7 @@ def foldl(link, fn, z):
     if link is Link.empty:
         return z
     "*** YOUR CODE HERE ***"
-    return foldl(______, ______, ______)
+    return foldl(link.rest, fn, fn(z, link.first))
 
 
 def foldr(link, fn, z):
@@ -207,6 +259,9 @@ def foldr(link, fn, z):
     6
     """
     "*** YOUR CODE HERE ***"
+    if link is Link.empty:
+        return z
+    return foldr(link.rest, fn, fn(link.first, z))
 
 
 def filterl(lst, pred):
@@ -216,6 +271,14 @@ def filterl(lst, pred):
     Link(4, Link(2))
     """
     "*** YOUR CODE HERE ***"
+    def fn(lst, x):
+        if pred(x):
+            ptr = lst
+            while ptr.rest != Link.empty:
+                ptr = ptr.rest
+            ptr.rest = Link(x)
+        return lst
+    return foldl(lst, fn, Link(0)).rest
 
 
 def reverse(lst):
@@ -229,9 +292,12 @@ def reverse(lst):
     True
     """
     "*** YOUR CODE HERE ***"
+    def fn(lst, x):
+        return Link(x, lst)
+    return foldl(lst, fn, Link.empty)
 
 
-identity = lambda x: x
+def identity(x): return x
 
 
 def foldl2(link, fn, z):
@@ -246,6 +312,7 @@ def foldl2(link, fn, z):
     """
     def step(x, g):
         "*** YOUR CODE HERE ***"
+        return lambda z: fn(g(z), x)
     return foldr(link, step, identity)(z)
 
 
