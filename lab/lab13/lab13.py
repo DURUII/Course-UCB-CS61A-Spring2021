@@ -19,10 +19,7 @@ def roman_numerals(text):
     >>> roman_numerals("she loves ALL editors equally.")
     []
     """
-    return re.findall(__________, text)
-
-
-import re
+    return re.findall(r"\b[IVXLCDM]+\b", text)
 
 
 def calculator_ops(calc_str):
@@ -37,10 +34,7 @@ def calculator_ops(calc_str):
     >>> calculator_ops("(* 2)")
     []
     """
-    return re.findall(__________, calc_str)
-
-
-import re
+    return re.findall("[*/+-]+ [0-9]+ [0-9]+", calc_str)
 
 
 def cs_classes(post):
@@ -58,4 +52,4 @@ def cs_classes(post):
     >>> cs_classes("Should I do the lab lites or regular labs in EE16A?")
     False
     """
-    return bool(re.search(__________, post))
+    return bool(re.search("(CS|cs)[0-9]+[a-cA-C]", post))
