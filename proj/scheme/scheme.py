@@ -79,11 +79,11 @@ def eval_all(expressions, env):
     if expressions is nil:
         return None
 
-    pointer, temp = expressions, None
-    while pointer is not nil:
-        temp = scheme_eval(pointer.first, env)
+    pointer = expressions
+    while pointer.rest is not nil:
+        scheme_eval(pointer.first, env)
         pointer = pointer.rest
-    return temp
+    return scheme_eval(pointer.first, env, True)
     # END PROBLEM 7
 
 ################
@@ -358,9 +358,9 @@ def do_if_form(expressions, env):
     """
     validate_form(expressions, 2, 3)
     if is_true_primitive(scheme_eval(expressions.first, env)):
-        return scheme_eval(expressions.rest.first, env)
+        return scheme_eval(expressions.rest.first, env, True)
     elif len(expressions) == 3:
-        return scheme_eval(expressions.rest.rest.first, env)
+        return scheme_eval(expressions.rest.rest.first, env, True)
 
 
 def do_and_form(expressions, env):
@@ -380,7 +380,7 @@ def do_and_form(expressions, env):
     "*** YOUR CODE HERE ***"
     pointer, temp = expressions, True
     while pointer is not nil:
-        temp = scheme_eval(pointer.first, env)
+        temp = scheme_eval(pointer.first, env, pointer.rest is nil)
         if is_false_primitive(temp):
             return False
         pointer = pointer.rest
@@ -405,7 +405,7 @@ def do_or_form(expressions, env):
     "*** YOUR CODE HERE ***"
     pointer, temp = expressions, False
     while pointer is not nil:
-        temp = scheme_eval(pointer.first, env)
+        temp = scheme_eval(pointer.first, env, pointer.rest is nil)
         if is_true_primitive(temp):
             return temp
         pointer = pointer.rest
@@ -715,6 +715,9 @@ def optimize_tail_calls(original_scheme_eval):
         result = Unevaluated(expr, env)
         # BEGIN PROBLEM 18
         "*** YOUR CODE HERE ***"
+        while isinstance(result, Unevaluated):
+            result = original_scheme_eval(result.expr, result.env)
+        return result
         # END PROBLEM 18
     return optimized_eval
 
@@ -722,7 +725,7 @@ def optimize_tail_calls(original_scheme_eval):
 ################################################################
 # Uncomment the following line to apply tail call optimization #
 ################################################################
-# scheme_eval = optimize_tail_calls(scheme_eval)
+scheme_eval = optimize_tail_calls(scheme_eval)
 
 
 ####################
