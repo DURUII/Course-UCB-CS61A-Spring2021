@@ -52,3 +52,4 @@
   to make sure that everything is available before)
 - Proj03: Optional Problem 2
 - HW07: Without Duplicates
+- Proj04: Problem 18 & 19
