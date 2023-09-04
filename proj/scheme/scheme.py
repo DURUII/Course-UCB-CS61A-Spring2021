@@ -36,6 +36,10 @@ def scheme_eval(expr, env, _=None):  # Optional third argument is ignored
     else:
         # BEGIN PROBLEM 4
         "*** YOUR CODE HERE ***"
+        operator = scheme_eval(expr.first, env)
+        validate_procedure(operator)
+        operands = expr.rest.map(lambda e: scheme_eval(e, env))
+        return scheme_apply(operator, operands, env)
         # END PROBLEM 4
 
 
@@ -71,7 +75,15 @@ def eval_all(expressions, env):
     2
     """
     # BEGIN PROBLEM 7
-    return scheme_eval(expressions.first, env)  # replace this with lines of your own code
+    # replace this with lines of your own code
+    if expressions is nil:
+        return None
+
+    pointer, temp = expressions, None
+    while pointer is not nil:
+        temp = scheme_eval(pointer.first, env)
+        pointer = pointer.rest
+    return temp
     # END PROBLEM 7
 
 ################
@@ -97,12 +109,18 @@ class Frame:
         """Define Scheme SYMBOL to have VALUE."""
         # BEGIN PROBLEM 2
         "*** YOUR CODE HERE ***"
+        self.bindings[symbol] = value
         # END PROBLEM 2
 
     def lookup(self, symbol):
         """Return the value bound to SYMBOL. Errors if SYMBOL is not found."""
         # BEGIN PROBLEM 2
         "*** YOUR CODE HERE ***"
+        pointer = self
+        while pointer is not None:
+            if symbol in pointer.bindings:
+                return pointer.bindings[symbol]
+            pointer = pointer.parent
         # END PROBLEM 2
         raise SchemeError('unknown identifier: {0}'.format(symbol))
 
@@ -122,6 +140,12 @@ class Frame:
             raise SchemeError('Incorrect number of arguments to function call')
         # BEGIN PROBLEM 10
         "*** YOUR CODE HERE ***"
+        frame_child = Frame(self)
+        formal, val = formals, vals
+        while formal is not nil:
+            frame_child.define(formal.first, val.first)
+            formal, val = map(lambda x: x.rest, (formal, val))
+        return frame_child
         # END PROBLEM 10
 
 ##############
@@ -163,11 +187,19 @@ class BuiltinProcedure(Procedure):
         arguments_list = []
         # BEGIN PROBLEM 3
         "*** YOUR CODE HERE ***"
+        pointer = args
+        while pointer is not nil:
+            arguments_list.append(pointer.first)
+            pointer = pointer.rest
+
+        if self.use_env:
+            arguments_list.append(env)
         # END PROBLEM 3
         try:
             return self.fn(*arguments_list)
         except TypeError as err:
-            raise SchemeError('incorrect number of arguments: {0}'.format(self))
+            raise SchemeError(
+                'incorrect number of arguments: {0}'.format(self))
 
 
 class LambdaProcedure(Procedure):
@@ -189,6 +221,7 @@ class LambdaProcedure(Procedure):
         of values, for a lexically-scoped call evaluated in Frame ENV, the environment."""
         # BEGIN PROBLEM 11
         "*** YOUR CODE HERE ***"
+        return self.env.make_child_frame(self.formals, args)
         # END PROBLEM 11
 
     def __str__(self):
@@ -243,16 +276,27 @@ def do_define_form(expressions, env):
     >>> scheme_eval(read_line("(f 3)"), env)
     5
     """
-    validate_form(expressions, 2)  # Checks that expressions is a list of length at least 2
+    validate_form(
+        expressions, 2)  # Checks that expressions is a list of length at least 2
     target = expressions.first
     if scheme_symbolp(target):
-        validate_form(expressions, 2, 2)  # Checks that expressions is a list of length exactly 2
+        # Checks that expressions is a list of length exactly 2
+        validate_form(expressions, 2, 2)
         # BEGIN PROBLEM 5
         "*** YOUR CODE HERE ***"
+        value = eval_all(expressions.rest, env)
+        env.define(target, value)
+        return target
         # END PROBLEM 5
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
         # BEGIN PROBLEM 9
         "*** YOUR CODE HERE ***"
+        name = target.first
+        formals = target.rest
+        validate_formals(formals)
+        body = expressions.rest
+        env.define(name, LambdaProcedure(formals, body, env))
+        return name
         # END PROBLEM 9
     else:
         bad_target = target.first if isinstance(target, Pair) else target
@@ -269,6 +313,7 @@ def do_quote_form(expressions, env):
     validate_form(expressions, 1, 1)
     # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
+    return expressions.first
     # END PROBLEM 6
 
 
@@ -297,6 +342,8 @@ def do_lambda_form(expressions, env):
     validate_formals(formals)
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    body = expressions.rest
+    return LambdaProcedure(formals, body, env)
     # END PROBLEM 8
 
 
@@ -331,6 +378,13 @@ def do_and_form(expressions, env):
     """
     # BEGIN PROBLEM 12
     "*** YOUR CODE HERE ***"
+    pointer, temp = expressions, True
+    while pointer is not nil:
+        temp = scheme_eval(pointer.first, env)
+        if is_false_primitive(temp):
+            return False
+        pointer = pointer.rest
+    return temp
     # END PROBLEM 12
 
 
@@ -349,6 +403,13 @@ def do_or_form(expressions, env):
     """
     # BEGIN PROBLEM 12
     "*** YOUR CODE HERE ***"
+    pointer, temp = expressions, False
+    while pointer is not nil:
+        temp = scheme_eval(pointer.first, env)
+        if is_true_primitive(temp):
+            return temp
+        pointer = pointer.rest
+    return False
     # END PROBLEM 12
 
 
@@ -361,15 +422,18 @@ def do_cond_form(expressions, env):
     while expressions is not nil:
         clause = expressions.first
         validate_form(clause, 1)
+
         if clause.first == 'else':
             test = True
             if expressions.rest != nil:
                 raise SchemeError('else must be last')
         else:
             test = scheme_eval(clause.first, env)
+
         if is_true_primitive(test):
             # BEGIN PROBLEM 13
             "*** YOUR CODE HERE ***"
+            return test if clause.rest == nil else eval_all(clause.rest, env)
             # END PROBLEM 13
         expressions = expressions.rest
 
@@ -396,6 +460,20 @@ def make_let_frame(bindings, env):
     names = values = nil
     # BEGIN PROBLEM 14
     "*** YOUR CODE HERE ***"
+    pointer = bindings
+
+    while pointer != nil:
+        validate_form(pointer.first, 2, 2)
+
+        name = pointer.first.first
+        value = eval_all(pointer.first.rest, env)
+
+        names = Pair(name, names)
+        values = Pair(value, values)
+
+        pointer = pointer.rest
+
+    validate_formals(names)
     # END PROBLEM 14
     return env.make_child_frame(names, values)
 
@@ -411,6 +489,7 @@ def do_define_macro(expressions, env):
     """
     # BEGIN Problem 19
     "*** YOUR CODE HERE ***"
+
     # END Problem 19
 
 
@@ -527,6 +606,12 @@ class MuProcedure(Procedure):
 
     # BEGIN PROBLEM EC
     "*** YOUR CODE HERE ***"
+
+    def make_call_frame(self, args, env):
+        """Make a frame that binds my formal parameters to ARGS, a Scheme list
+        of values, for a lexically-scoped call evaluated in Frame ENV, the environment."""
+        return env.make_child_frame(self.formals, args)
+
     # END PROBLEM EC
 
     def __str__(self):
@@ -544,6 +629,8 @@ def do_mu_form(expressions, env):
     validate_formals(formals)
     # BEGIN PROBLEM EC
     "*** YOUR CODE HERE ***"
+    body = expressions.rest
+    return MuProcedure(formals, body)
     # END PROBLEM EC
 
 
@@ -565,14 +652,15 @@ class Promise:
         if self.expression is not None:
             value = scheme_eval(self.expression, self.env)
             if not (value is nil or isinstance(value, Pair)):
-                raise SchemeError("result of forcing a promise should be a pair or nil, but was %s" % value)
+                raise SchemeError(
+                    "result of forcing a promise should be a pair or nil, but was %s" % value)
             self.value = value
             self.expression = None
         return self.value
 
     def __str__(self):
         return '#[promise ({0}forced)]'.format(
-                'not ' if self.expression is not None else '')
+            'not ' if self.expression is not None else '')
 
 
 def do_delay_form(expressions, env):
@@ -698,7 +786,7 @@ def read_eval_print_loop(next_line, env, interactive=False, quiet=False,
                     err = SchemeError(err)
                     raise err
             if (isinstance(err, RuntimeError) and
-                'maximum recursion depth exceeded' not in getattr(err, 'args')[0]):
+                    'maximum recursion depth exceeded' not in getattr(err, 'args')[0]):
                 raise
             elif isinstance(err, RuntimeError):
                 print('Error: maximum recursion depth exceeded')
